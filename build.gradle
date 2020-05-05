@@ -1,48 +1,33 @@
-allprojects {
-    group 'de.exlll'
-    version '2.2.0'
-}
-subprojects {
-    apply plugin: 'java'
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
-    repositories { mavenCentral() }
-
-    dependencies {
-        testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.3'
-        testCompile group: 'org.junit.platform', name: 'junit-platform-runner', version: '1.0.3'
-        testCompile group: 'org.junit.platform', name: 'junit-platform-suite-api', version: '1.0.3'
-        testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
-        testCompile group: 'com.google.jimfs', name: 'jimfs', version: '1.1'
-    }
-}
-buildscript {
-    if (project.hasProperty("local_script")) {
-        apply from: file(local_script + "/buildscript.local.gradle"), to: buildscript
-    }
-}
-if (project.hasProperty("local_script")) {
-    apply from: file(local_script + "/build.local.gradle")
+plugins {
+    id 'java'
+    id 'nebula.maven-publish' version '17.0.0'
 }
 
-project(':configlib-core') {
-    dependencies { compile group: 'org.yaml', name: 'snakeyaml', version: '1.20' }
-}
-project(':configlib-bukkit') {
-    repositories { maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' } }
-    dependencies {
-        compile project(':configlib-core')
-        compile group: 'org.bukkit', name: 'bukkit', version: '1.12.2-R0.1-SNAPSHOT'
+group 'de.exlll'
+version '2.2.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
-    jar { from { project(':configlib-core').sourceSets.main.output } }
-}
-project(':configlib-bungee') {
-    repositories { maven { url 'https://oss.sonatype.org/content/repositories/snapshots' } }
-    dependencies {
-        compile project(':configlib-core')
-        compile group: 'net.md-5', name: 'bungeecord-api', version: '1.12-SNAPSHOT'
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
     }
-    jar { from { project(':configlib-core').sourceSets.main.output } }
+}
+
+dependencies {
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.0.3'
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-runner', version: '1.0.3'
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-suite-api', version: '1.0.3'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+    testImplementation group: 'com.google.jimfs', name: 'jimfs', version: '1.1'
+
+    implementation group: 'org.yaml', name: 'snakeyaml', version: '1.26'
+    compileOnly 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
 }
