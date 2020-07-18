@@ -44,12 +44,13 @@ public abstract class Configuration<C extends Configuration<C>> {
      *                                     this configuration
      */
     public final void save() {
+        preSave();
         try {
-            preSave();
             MappingInfo mappingInfo = MappingInfo.from(this);
             Map<String, Object> map = FieldMapper
                     .instanceToMap(this, mappingInfo);
             getSource().saveConfiguration(getThis(), map);
+            postSave();
         } catch (IOException e) {
             throw new ConfigurationStoreException(e);
         }
@@ -64,6 +65,7 @@ public abstract class Configuration<C extends Configuration<C>> {
      *                                     this configuration
      */
     public final void load() {
+        preLoad();
         try {
             Map<String, Object> map = getSource().loadConfiguration(getThis());
             MappingInfo mappingInfo = MappingInfo.from(this);
@@ -95,6 +97,16 @@ public abstract class Configuration<C extends Configuration<C>> {
      * The default implementation of this method does nothing.
      */
     protected void preSave() {}
+
+    /**
+     * Hook that is executed right after this {@code Configuration} is successfully saved
+     */
+    protected void postSave() {}
+
+    /**
+     * Hook that is executed right before this {@code Configuration} gets loaded
+     */
+    protected void preLoad() {}
 
     /**
      * Hook that is executed right after this {@code Configuration} has
