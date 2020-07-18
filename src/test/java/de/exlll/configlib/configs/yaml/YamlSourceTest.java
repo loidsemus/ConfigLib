@@ -23,7 +23,7 @@ class YamlSourceTest {
     @BeforeEach
     void setUp() {
         fileSystem = Jimfs.newFileSystem();
-        configPath = fileSystem.getPath("/a/b/config.yml");
+        configPath = fileSystem.getPath("a/b/config.yml");
     }
 
     @AfterEach

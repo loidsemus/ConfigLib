@@ -30,8 +30,8 @@ class YamlConfigurationTest {
     @BeforeEach
     void setUp() {
         fileSystem = Jimfs.newFileSystem();
-        testPath = fileSystem.getPath("/a/b/test.yml");
-        configPath = fileSystem.getPath("/a/b/config.yml");
+        testPath = fileSystem.getPath("a/b/test.yml");
+        configPath = fileSystem.getPath("a/b/config.yml");
     }
 
     @AfterEach
