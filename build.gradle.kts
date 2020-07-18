@@ -1,10 +1,10 @@
 plugins {
-    id("java")
-    id("nebula.maven-publish") version "17.0.0"
-    id("nebula.javadoc-jar") version "17.0.0"
+    id("java-library")
+    id("maven-publish")
+    id("signing")
 }
 
-group = "de.exlll"
+group = "me.loidsemus"
 version = "2.2.0"
 
 repositories {
@@ -21,6 +21,24 @@ dependencies {
     testImplementation("com.google.jimfs:jimfs:1.1")
 
     implementation("org.yaml:snakeyaml:1.26")
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            artifactId = "configlib"
+            from(components["java"])
+            pom {
+                name.set("configlib")
+                description.set("Annotation-driven YAML config library")
+            }
+        }
+    }
 }
 
 tasks.test {
