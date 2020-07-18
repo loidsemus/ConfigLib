@@ -1,13 +1,10 @@
-# ConfigLib v2
+# ConfigLib
 
-**A Bukkit and BungeeCord library for storing and loading configurations**
+**A library for storing and loading YAML configurations**
 
 This library facilitates creating, saving and loading configurations by reflectively converting configuration
 instances to serializable `Map`s which can be transformed to different representations (e.g. YAML) before being
 stored to files or other storage systems.
-
-Currently this library only supports storing configurations as YAML. However, users may provide their own
-storage systems.
 
 For a step-by-step tutorial see: [Tutorial](https://github.com/Exlll/ConfigLib/wiki/Tutorial)
 
@@ -65,24 +62,17 @@ fields of class `B` will be saved or loaded, respectively.
 For a step-by-step tutorial see: [Tutorial](https://github.com/Exlll/ConfigLib/wiki/Tutorial)
 
 #### Creating configurations
-To create a YAML configuration, create a new class and extend `YamlConfiguration`. If you write a Bukkit plugin, 
-you can alternatively extend `BukkitYamlConfiguration` which is a subclass of `YamlConfiguration` and can 
-properly convert Bukkit classes like `Inventory` and `ItemStack` to YAML.
+To create a YAML configuration, create a new class and extend `YamlConfiguration`.
 
 #### Instantiating configurations
-* To instantiate a `YamlConfiguration`, you need to pass a `Path` and optionally a `YamlConfiguration.YamlProperties`
+To instantiate a `YamlConfiguration`, you need to pass a `Path` and optionally a `YamlConfiguration.YamlProperties`
 object to its constructor.
-* To instantiate a `BukkitYamlConfiguration`, you need to pass a `Path` and optionally a
-`BukkitYamlConfiguration.BukkitYamlProperties` object to its constructor.
 
-If you don't pass a `(Bukkit-)YamlProperties` object, the `(Bukkit-)YamlProperties.DEFAULT` instance will be used.
+If you don't pass a `YamlProperties` object, the `YamlProperties.DEFAULT` instance will be used.
 
-#### Instantiating (Bukkit-)YamlProperties
-To instantiate a new `(Bukkit-)YamlProperties` object, call `(Bukkit-)YamlProperties.builder()`,
+#### Instantiating YamlProperties
+To instantiate a new `YamlProperties` object, call `YamlProperties.builder()`,
 configure the builder and then call its `build()` method.
-
-Note: The `BukkitYamlProperties` is a subclass of `YamlProperties` but doesn't add any new methods to it. 
-Its sole purpose is to provide more appropriate defaults to the underlying YAML parser.
 
 #### Saving and loading configurations
 Instances of your configuration class have a `load`, `save` and `loadAndSave` method:
@@ -238,8 +228,8 @@ class MyConfiguration extends YamlConfiguration {
 }
 ```
 #### Adding comments
-You can add comments to a configuration class or a its field by using the `@Comment` annotation.
-Class comments are saved at the beginning of a configuration file.
+You can add comments to a configuration class or its field by using the `@Comment` annotation.
+Comment annotations on classes are saved at the beginning of a configuration file.
 
 ```java
 @Comment({"A", "", "B"})
@@ -265,6 +255,8 @@ class MyConfiguration extends YamlConfiguration {
    // ...
 }
 ```
+
+`postSave()` and `preLoad()` are also available.
 
 #### Excluding fields from being converted
 To exclude fields from being converted, annotate them with the `@NoConvert` annotation. This may be useful if the
@@ -461,42 +453,5 @@ public final class DatabasePlugin extends JavaPlugin {
 
         System.out.println(config.getAdminAccount().getUsername());
     }
-}
-```
-## Import
-#### Maven
-```xml
-<repository>
-    <id>de.exlll</id>
-    <url>http://exlll.de:8081/artifactory/releases/</url>
-</repository>
-
-<!-- for Bukkit plugins -->
-<dependency>
-    <groupId>de.exlll</groupId>
-    <artifactId>configlib-bukkit</artifactId>
-    <version>2.2.0</version>
-</dependency>
-
-<!-- for Bungee plugins -->
-<dependency>
-    <groupId>de.exlll</groupId>
-    <artifactId>configlib-bungee</artifactId>
-    <version>2.2.0</version>
-</dependency>
-```
-#### Gradle
-```groovy
-repositories {
-    maven {
-        url 'http://exlll.de:8081/artifactory/releases/'
-    }
-}
-dependencies {
-    // for Bukkit plugins
-    compile group: 'de.exlll', name: 'configlib-bukkit', version: '2.2.0'
-
-    // for Bungee plugins
-    compile group: 'de.exlll', name: 'configlib-bungee', version: '2.2.0'
 }
 ```
