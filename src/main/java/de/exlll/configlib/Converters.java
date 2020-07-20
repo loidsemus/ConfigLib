@@ -84,6 +84,14 @@ final class Converters {
     private static Converter<Object, Object> selectConverter(
             Class<?> valueType, ConversionInfo info
     ) {
+        if (info.getInstance() instanceof Configuration) {
+            Configuration<?> configuration = (Configuration<?>) info.getInstance();
+            Map<String, Converter<?, ?>> defaultConverters = configuration.getProperties().getDefaultConverters();
+            if (defaultConverters.containsKey(info.getFieldType().getCanonicalName())) {
+                return toObjectConverter(defaultConverters.get(info.getFieldType().getCanonicalName()));
+            }
+        }
+
         Converter<?, ?> converter;
         if (Reflect.hasNoConvert(info.getField())) {
             converter = IDENTITY_CONVERTER;

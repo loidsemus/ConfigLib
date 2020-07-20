@@ -7,6 +7,7 @@ import de.exlll.configlib.format.FieldNameFormatter;
 import de.exlll.configlib.format.FieldNameFormatters;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -127,6 +128,7 @@ public abstract class Configuration<C extends Configuration<C>> {
     protected static class Properties {
         private final FieldNameFormatter formatter;
         private final FieldFilter filter;
+        private final Map<String, Converter<?, ?>> defaultConverters;
 
         /**
          * Constructs a new {@code Properties} object.
@@ -137,6 +139,7 @@ public abstract class Configuration<C extends Configuration<C>> {
         protected Properties(Builder<?> builder) {
             this.formatter = builder.formatter;
             this.filter = builder.filter;
+            this.defaultConverters = builder.defaultConverters;
         }
 
         @SuppressWarnings("rawtypes")
@@ -167,6 +170,10 @@ public abstract class Configuration<C extends Configuration<C>> {
             return filter;
         }
 
+        public Map<String, Converter<?, ?>> getDefaultConverters() {
+            return defaultConverters;
+        }
+
         /**
          * Builder classes are used for constructing {@code Properties}.
          *
@@ -175,6 +182,7 @@ public abstract class Configuration<C extends Configuration<C>> {
         protected static abstract class Builder<B extends Builder<B>> {
             private FieldNameFormatter formatter = FieldNameFormatters.IDENTITY;
             private FieldFilter filter = FieldFilters.DEFAULT;
+            private Map<String, Converter<?, ?>> defaultConverters = new HashMap<>();
 
             protected Builder() {}
 
@@ -211,6 +219,11 @@ public abstract class Configuration<C extends Configuration<C>> {
              */
             public final B addFilter(FieldFilter filter) {
                 this.filter = this.filter.and(filter);
+                return getThis();
+            }
+
+            public final B addDefaultConverter(Class<?> target, Converter<?, ?> converter) {
+                this.defaultConverters.put(target.getCanonicalName(), converter);
                 return getThis();
             }
 

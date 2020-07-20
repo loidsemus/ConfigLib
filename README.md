@@ -383,6 +383,13 @@ class MyConfiguration extends YamlConfiguration {
 
 Note: Only a single converter instance is created which is cached.
 
+##### Default converters for specific types
+It is possible to set a default converter to be used with a certain type,
+use `addDefaultConverter` on the configuration properties builder.
+```java
+YamlProperties.builder().addDefaultConverter(Message.class, new MessageConverter()).build()
+```
+
 ## Example
 
 For a step-by-step tutorial of a more complex example see:
