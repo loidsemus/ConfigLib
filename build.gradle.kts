@@ -1,7 +1,6 @@
 plugins {
     id("java-library")
     id("maven-publish")
-    id("signing")
 }
 
 group = "me.loidsemus"
@@ -29,8 +28,18 @@ java {
 }
 
 publishing {
+    repositories {
+        maven {
+            name = "GithubPackages"
+            url = uri("https://maven.pkg.github.com/loidsemus/ConfigLib")
+            credentials {
+                username = System.getenv("GH_USERNAME")
+                password = System.getenv("GH_PKG_TOKEN")
+            }
+        }
+    }
     publications {
-        create<MavenPublication>("mavenJava") {
+        create<MavenPublication>("gh-pkg") {
             artifactId = "configlib"
             from(components["java"])
             pom {
